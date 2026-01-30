@@ -1,9 +1,7 @@
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
-import 'package:intl/intl.dart';
 
 class ButlerEndpoint extends Endpoint {
-  
   Future<DailyOverview> getDailyOverview(Session session) async {
     // 1. Intelligence: Check Overdue Tasks
     await _processOverdueTasks(session);
@@ -38,8 +36,11 @@ class ButlerEndpoint extends Endpoint {
     // 5. Seed if empty
     if (tasks.isEmpty && briefings.isEmpty) {
       await _seedData(session);
-       tasks = await Task.db.find(session, where: (t) => t.completed.equals(false));
-       briefings = await Briefing.db.find(session);
+      tasks = await Task.db.find(
+        session,
+        where: (t) => t.completed.equals(false),
+      );
+      briefings = await Briefing.db.find(session);
     }
 
     // 6. Generate Greeting
@@ -70,18 +71,21 @@ class ButlerEndpoint extends Endpoint {
     return await Task.db.find(
       session,
       where: (t) => t.completed.equals(true),
-      orderBy: (t) => t.createdAt, // Ideally completedAt, but using createdAt/updatedAt logic for MVP
+      orderBy: (t) => t
+          .createdAt, // Ideally completedAt, but using createdAt/updatedAt logic for MVP
       orderDescending: true,
     );
   }
 
-
   // --- Intelligence Logic ---
 
   Future<void> _processOverdueTasks(Session session) async {
-    final tasks = await Task.db.find(session, where: (t) => t.completed.equals(false));
+    final tasks = await Task.db.find(
+      session,
+      where: (t) => t.completed.equals(false),
+    );
     final now = DateTime.now();
-    
+
     for (var task in tasks) {
       // Combine date and time to check if overdue
       // Assuming naive check for MVP
@@ -96,9 +100,10 @@ class ButlerEndpoint extends Endpoint {
   }
 
   String _generateGreeting(List<Task> tasks, List<Briefing> briefings) {
-    final highPriority = tasks.where((t) => t.priority.toLowerCase() == 'high').length;
-    final briefingCount = briefings.length;
-    
+    final highPriority = tasks
+        .where((t) => t.priority.toLowerCase() == 'high')
+        .length;
+
     if (highPriority > 0) {
       return "Good Afternoon, Yogesh. You have $highPriority overdue or high-priority items.";
     } else if (tasks.isNotEmpty) {
@@ -110,10 +115,14 @@ class ButlerEndpoint extends Endpoint {
 
   int _priorityValue(String priority) {
     switch (priority.toLowerCase()) {
-      case 'high': return 3;
-      case 'medium': return 2;
-      case 'low': return 1;
-      default: return 1;
+      case 'high':
+        return 3;
+      case 'medium':
+        return 2;
+      case 'low':
+        return 1;
+      default:
+        return 1;
     }
   }
 
@@ -127,7 +136,7 @@ class ButlerEndpoint extends Endpoint {
       final parts = t.split(':');
       int h = int.parse(parts[0]);
       int m = parts.length > 1 ? int.parse(parts[1]) : 0;
-      
+
       if (isPm && h < 12) h += 12;
       if (!isPm && h == 12) h = 0; // 12am
 
@@ -167,14 +176,14 @@ class ButlerEndpoint extends Endpoint {
         createdAt: now,
       ),
     ]);
-    
+
     await Briefing.db.insert(session, [
       Briefing(
         title: 'Daily Market Update',
         summary: 'Tech stocks up 2%. Fed meeting scheduled for this afternoon.',
         priority: 'medium',
         createdAt: now,
-      )
+      ),
     ]);
   }
 }
