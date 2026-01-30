@@ -1,0 +1,10 @@
+class: Task
+table: task
+fields:
+  title: String
+  description: String?
+  date: DateTime
+  time: String
+  priority: String
+  completed: bool
+  createdAt: DateTime

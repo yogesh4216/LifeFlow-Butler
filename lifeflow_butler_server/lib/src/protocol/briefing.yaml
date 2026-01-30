@@ -1,0 +1,7 @@
+class: Briefing
+table: briefing
+fields:
+  title: String
+  summary: String
+  priority: String
+  createdAt: DateTime
