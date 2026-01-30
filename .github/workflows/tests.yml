@@ -13,6 +13,11 @@ jobs:
       VERSION: '3.2.3'
       SERVERPOD_PASSWORD_database: 'RRCrie_TBrOnFLZZ6BvAL871MmFc4Qh4'
       SERVERPOD_PASSWORD_redis: 'HMTQM0DVkZvw3O42zrio8IW3SxRizwCq'
+      # Docker Compose Environment Variables
+      POSTGRES_PASSWORD: 'NVzX6QvUntWmj_BlbEo0M-TNjQITli2C'
+      POSTGRES_TEST_PASSWORD: 'RRCrie_TBrOnFLZZ6BvAL871MmFc4Qh4'
+      REDIS_PASSWORD: 'd0XDjLDf5bKqYyY05vW7SBzVzZNq0czW'
+      REDIS_TEST_PASSWORD: 'HMTQM0DVkZvw3O42zrio8IW3SxRizwCq'
 
     steps:
       - uses: actions/checkout@v4
